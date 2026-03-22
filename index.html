@@ -1,1 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>In Loving Memory</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000; /* Respectful black background */
+            overflow: hidden;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            color: #fff;
+        }
 
+        /* Container for all slides */
+        #slideshow-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: none; /* Hidden until Start is clicked */
+        }
+
+        /* Individual slide styling */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 2s ease-in-out; /* Smooth 2-second crossfade */
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* The active slide */
+        .slide.active {
+            opacity: 1;
+            z-index: 2;
+        }
+
+        /* The image inside the slide + subtle zoom animation */
+        .slide img, .slide video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Ensures the whole picture is visible without cropping */
+            transform: scale(1);
+            transition: transform 10s linear; /* Subtle Ken Burns zoom effect */
+        }
+
+        .slide.active img {
+            transform: scale(1.05); /* Zooms in 5% over 10 seconds */
+        }
+
+        /* Start screen overlay styling */
+        #start-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            background-color: #000;
+        }
+
+        #start-btn {
+            padding: 15px 40px;
+            font-size: 18px;
+            color: #fff;
+            background-color: transparent;
+            border: 1px solid #fff;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s, color 0.3s;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        #start-btn:hover {
+            background-color: #fff;
+            color: #000;
+        }
+        
+        /* Audio player styling (hidden by default) */
+        audio {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="start-screen">
+        <button id="start-btn">Begin Memorial</button>
+    </div>
+
+    <audio id="bg-music" loop>
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="slideshow-container">
+        
+        <div class="slide active">
+            <img src="photo1.jpg" alt="Memory 1">
+        </div>
+
+        <div class="slide">
+            <img src="photo2.jpg" alt="Memory 2">
+        </div>
+
+        <div class="slide">
+            <video src="video1.mp4" autoplay loop muted playsinline></video>
+        </div>
+
+        <div class="slide">
+            <img src="photo3.jpg" alt="Memory 3">
+        </div>
+
+        </div>
+
+    <script>
+        // Slideshow Logic
+        const slides = document.querySelectorAll('.slide');
+        const startScreen = document.getElementById('start-screen');
+        const slideshowContainer = document.getElementById('slideshow-container');
+        const startBtn = document.getElementById('start-btn');
+        const bgMusic = document.getElementById('bg-music');
+        
+        let currentSlide = 0;
+        const slideDuration = 6000; // Time per slide in milliseconds (6000 = 6 seconds)
+
+        function nextSlide() {
+            // Remove active class from current slide
+            slides[currentSlide].classList.remove('active');
+            
+            // Move to the next slide, loop back to start if at the end
+            currentSlide = (currentSlide + 1) % slides.length;
+            
+            // Add active class to new slide
+            slides[currentSlide].classList.add('active');
+        }
+
+        // Start button event listener
+        startBtn.addEventListener('click', () => {
+            // Hide start screen and show slideshow
+            startScreen.style.display = 'none';
+            slideshowContainer.style.display = 'block';
+            
+            // Play background music
+            bgMusic.play().catch(error => {
+                console.log("Audio playback failed, possibly due to browser settings:", error);
+            });
+
+            // Start the slideshow loop
+            setInterval(nextSlide, slideDuration);
+        });
+    </script>
+</body>
+</html>
